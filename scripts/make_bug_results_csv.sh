@@ -29,6 +29,7 @@ function process() {
     repro_bugs $bench-afl-results-$i $class testWithInputStream crashes
     repro_bugs $bench-rnd-results-$i $class testWithGenerator failures 
     repro_bugs $bench-zest-results-$i $class testWithGenerator failures 
+    repro_bugs $bench-pest-results-$i $class testWithGenerator failures 
   done
 }
 

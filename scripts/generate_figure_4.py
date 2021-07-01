@@ -23,12 +23,12 @@ color_cycle=["#0072B2", "#E69F00", "#999999" ]
 line_cycle=['-', "--", ":", "--"]
 
 # Dictionaries for easy plotting
-nice_names = {"zest": "Zest", "afl": "AFL", "rnd": "QuickCheck"}
+nice_names = {"zest": "Zest","pest":"Pest", "afl": "AFL", "rnd": "QuickCheck"}
 benchmark_figs = {"ant": "b", "maven": "a", "closure": "c", "rhino": "d", "bcel": "e"}
 
 # The benchmarks + techniques to generate graphs for
 benchmarks = ["ant", "maven", "closure", "rhino", "bcel"]
-techniques = ["zest", "afl", "rnd"]
+techniques = ["zest","pest", "afl", "rnd"]
 folder_suffixes = []
 
 # Given a file with format

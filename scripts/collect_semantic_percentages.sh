@@ -17,11 +17,12 @@ if [ ! -d $RESULTS_DIR ]; then
 fi
 
 for e in $(seq $RUNS); do
+  JQF_PEST_OUT_DIR="${RESULTS_DIR}/$NAME-pest-results-$e"
   JQF_OUT_DIR="${RESULTS_DIR}/$NAME-zest-results-$e"
   AFL_OUT_DIR="${RESULTS_DIR}/$NAME-afl-results-$e"
   RND_OUT_DIR="${RESULTS_DIR}/$NAME-rnd-results-$e"
 
-  OUT_DIRS=($JQF_OUT_DIR $AFL_OUT_DIR $RND_OUT_DIR)
+  OUT_DIRS=($JQF_OUT_DIR $JQF_PEST_OUT_DIR $AFL_OUT_DIR $RND_OUT_DIR)
 
   for dir_index in ${!OUT_DIRS[@]}; do
      OUT_DIR=${OUT_DIRS[$dir_index]}

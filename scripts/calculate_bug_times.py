@@ -22,7 +22,7 @@ bug_data:Dict[Bug, Dict[str, List[int]]] = defaultdict(lambda: defaultdict(list)
 def main(repetitions:int) -> None:
 	for i in range(repetitions):
 		for bench in ["maven", "ant", "closure", "rhino", "bcel"]:
-			for tech in ["afl", "zest", "rnd"]:
+			for tech in ["afl", "zest","pest" , "rnd"]:
 				try:
 					process(bench, tech, i+1)
 				except FileNotFoundError:
