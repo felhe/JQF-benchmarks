@@ -2,7 +2,7 @@
 
 # Check usage
 if [ $# -lt 4 ]; then
-  echo "Usage: $0 RESULTS_DIR TIME REPS <full||short>" 
+  echo "Usage: $0 RESULTS_DIR TIME REPS <FULL||SHORT>" 
   exit 1
 fi
 
