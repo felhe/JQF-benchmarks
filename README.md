@@ -15,9 +15,9 @@ A Benchmark can be started by running `run_all.sh`.
 
 Example (takes about 16h):
 ```
-./scripts/run_all-sh <Results Dir> <time> <Repetitions> <FULL||SHORT>
+./scripts/run_all.sh <Results Dir> <time> <Repetitions> <FULL||SHORT>
 
-./scripts/run_all-sh results 10m 10 SHORT
+./scripts/run_all.sh results 10m 10 SHORT
 ```
 
 `SHORT`: only zest and Pest Algorithms are benchmarked 
