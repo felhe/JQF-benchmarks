@@ -9,7 +9,7 @@ docker run --name pest_Container -it pest_image
 
 ## First Steps inside Container:
 
-checkout the Branch that you want to test within `jqf-PEST` and run `mvn install` afterwards.
+First checkout the Branch that you want to test within `jqf-PEST` and run `mvn install` afterwards.
 
 A Benchmark can be started by running `run_all.sh`.
 
