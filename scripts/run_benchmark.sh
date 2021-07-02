@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ $# -lt 6 ]; then
-  echo "Usage: $0 <NAME> <TEST_CLASS> <IDX> <TIME> <DICT> <SEEDS>"
+if [ $# -lt 7 ]; then
+  echo "Usage: $0 <NAME> <TEST_CLASS> <IDX> <TIME> <DICT> <SEEDS> <full||short>"
   exit 1
 fi
 
@@ -53,16 +53,26 @@ fi
 export JVM_OPTS="$JVM_OPTS -XX:-UseGCOverheadLimit"
 
 
-# Run Zest
-timeout $TIME $JQF_PEST -c $($JQF_PEST_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_PEST_OUT_DIR || [ $? -eq 124 ]
+if [$7 = "SHORT"] then
+  # Run Zest
+  timeout $TIME $JQF_PEST -c $($JQF_PEST_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_PEST_OUT_DIR || [ $? -eq 124 ]
 
-# Run Zest
-timeout $TIME $JQF_ZEST -c $($JQF_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_OUT_DIR || [ $? -eq 124 ]
+  # Run Zest
+  timeout $TIME $JQF_ZEST -c $($JQF_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_OUT_DIR || [ $? -eq 124 ]
+fi
 
-# Run AFL
-timeout $TIME $JQF_AFL -m none -t 10000 -c $($JQF_DIR/scripts/examples_classpath.sh) -x $DICT -o $AFL_OUT_DIR -T $NAME-afl-$e -i $SEEDS_DIR $TEST_CLASS testWithInputStream || [ $? -eq 124 ]
 
-# Run Random
-JVM_OPTS="$JVM_OPTS -Djqf.ei.TOTALLY_RANDOM=true" timeout $TIME $JQF_ZEST -c $($JQF_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $RND_OUT_DIR || [ $? -eq 124 ]
+if [$7 = "LONG"] then
+  # Run Zest
+  timeout $TIME $JQF_PEST -c $($JQF_PEST_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_PEST_OUT_DIR || [ $? -eq 124 ]
 
+  # Run Zest
+  timeout $TIME $JQF_ZEST -c $($JQF_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_OUT_DIR || [ $? -eq 124 ]
+
+  # Run AFL
+  timeout $TIME $JQF_AFL -m none -t 10000 -c $($JQF_DIR/scripts/examples_classpath.sh) -x $DICT -o $AFL_OUT_DIR -T $NAME-afl-$e -i $SEEDS_DIR $TEST_CLASS testWithInputStream || [ $? -eq 124 ]
+
+  # Run Random
+  JVM_OPTS="$JVM_OPTS -Djqf.ei.TOTALLY_RANDOM=true" timeout $TIME $JQF_ZEST -c $($JQF_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $RND_OUT_DIR || [ $? -eq 124 ]
+fi
 
