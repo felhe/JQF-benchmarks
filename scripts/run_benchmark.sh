@@ -63,7 +63,7 @@ fi
 
 
 if [[ "$7" == "FULL" ]]; then
-  # Run Zest
+  # Run Pest
   timeout $TIME $JQF_PEST -c $($JQF_PEST_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_PEST_OUT_DIR || [ $? -eq 124 ]
 
   # Run Zest
