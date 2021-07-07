@@ -8,6 +8,7 @@ RUN apt-get install -y python3
 RUN apt-get install -y python3-matplotlib
 RUN apt-get install -y git
 RUN apt-get install -y nano
+RUN apt-get install -y bash-completion
 RUN apt-get update
 
 ## copy scripts Folder
