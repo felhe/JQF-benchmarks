@@ -28,7 +28,7 @@ fi
 JQF_ZEST="$JQF_DIR/bin/jqf-zest"
 JQF_AFL="$JQF_DIR/bin/jqf-afl-fuzz"
 JQF_PEST="$JQF_PEST_DIR/bin/jqf-zest"
-JQF_PEST2="$JQF_PEST_DIR2/bin/jqf-zest"
+JQF_PEST2="$JQF_PEST2_DIR/bin/jqf-zest"
 NAME=$1
 TEST_CLASS="edu.berkeley.cs.jqf.examples.$2"
 IDX=$3
