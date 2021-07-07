@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -lt 7 ]; then
-  echo "Usage: $0 <NAME> <TEST_CLASS> <IDX> <TIME> <DICT> <SEEDS> <FULL||SHORT>"
+  echo "Usage: $0 <NAME> <TEST_CLASS> <IDX> <TIME> <DICT> <SEEDS> <FULL||SHORT||COMPAREPEST>"
   exit 1
 fi
 
@@ -28,6 +28,7 @@ fi
 JQF_ZEST="$JQF_DIR/bin/jqf-zest"
 JQF_AFL="$JQF_DIR/bin/jqf-afl-fuzz"
 JQF_PEST="$JQF_PEST_DIR/bin/jqf-zest"
+JQF_PEST2="$JQF_PEST_DIR2/bin/jqf-zest"
 NAME=$1
 TEST_CLASS="edu.berkeley.cs.jqf.examples.$2"
 IDX=$3
@@ -39,6 +40,7 @@ SEEDS_DIR=$(dirname "$SEEDS")
 e=$IDX
 
 JQF_PEST_OUT_DIR="$NAME-pest-results-$e"
+JQF_PEST2_OUT_DIR="$NAME-pest2-results-$e"
 JQF_OUT_DIR="$NAME-zest-results-$e"
 AFL_OUT_DIR="$NAME-afl-results-$e"
 RND_OUT_DIR="$NAME-rnd-results-$e"
@@ -57,6 +59,17 @@ if [[ "$7" == "SHORT" ]]; then
   # Run Zest
   timeout $TIME $JQF_PEST -c $($JQF_PEST_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_PEST_OUT_DIR || [ $? -eq 124 ]
 
+  # Run Zest
+  timeout $TIME $JQF_ZEST -c $($JQF_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_OUT_DIR || [ $? -eq 124 ]
+fi
+
+if [[ "$7" == "COMPAREPEST" ]]; then
+  # Run Pest
+  timeout $TIME $JQF_PEST -c $($JQF_PEST_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_PEST_OUT_DIR || [ $? -eq 124 ]
+
+  # Run Pest2
+  timeout $TIME $JQF_PEST2 -c $($JQF_PEST2_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_PEST2_OUT_DIR || [ $? -eq 124 ]
+  
   # Run Zest
   timeout $TIME $JQF_ZEST -c $($JQF_DIR/scripts/examples_classpath.sh) $TEST_CLASS testWithGenerator $JQF_OUT_DIR || [ $? -eq 124 ]
 fi
