@@ -23,3 +23,5 @@ Example (takes about 16h):
 `SHORT`: only zest and Pest Algorithms are benchmarked 
 
 `FULL`: zest, Pest, AFL, and randon/Quickcheck algorithms are evaluated
+
+`COMPAREPEST`: zest, Pest, Pest2 used to compare two Pest versions against eachother and zest
