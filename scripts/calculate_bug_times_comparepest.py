@@ -9,8 +9,8 @@ from collections import defaultdict
 import sys
 
 
-# Bugs are represented as tuple of (bench, exception)
-Bug = Tuple[str, str]
+# Bugs are represented as tuple of (bench, exception,repetition_id)
+Bug = Tuple[str, str, int]
 
 # Crash times are a list of (elapsed_time, num_crashes)
 CrashTimes = List[Tuple[int, int]]
@@ -31,14 +31,16 @@ def main(repetitions:int) -> None:
 	table_csv:str = 'figures/Table_2.csv'
 	with open(table_csv, 'w') as csvfile:
 		csv = writer(csvfile)
-		csv.writerow(['benchmark', 'exception', 'tool', 'mtf', 'repeatibility'])
+		csv.writerow(['benchmark','repetition_id', 'exception', 'tool', 'mtf', 'repeatibility'])
 		for bug, data in bug_data.items():
 			bench:str = bug[0]
 			ex:str = bug[1]
+			rep:int =bug[2]
 			for technique, times in data.items():
-				mtf:float = sum(times)/float(len(times))
 				repeatibility:float = len(times)/repetitions
-				csv.writerow([bench, ex, technique, mtf, repeatibility])
+				for crash_time in times:
+					mtf:float = crash_time
+					csv.writerow([bench,rep, ex, technique, mtf, repeatibility])
 
 
 def process(bench:str, tech:str, id:int) -> None:
@@ -69,7 +71,7 @@ def process(bench:str, tech:str, id:int) -> None:
 					crash_id = int(input[11:])
 				else:
 					continue # Other stuff
-				bug:Bug = (bench, ex)
+				bug:Bug = (bench, ex,id)
 				if bug not in bugs_found:
 					bugs_found.add(bug)
 					bug_find_time:int = find_crash_time(crash_id, crash_times)
