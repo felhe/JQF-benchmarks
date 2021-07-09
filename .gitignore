@@ -1,1 +1,6 @@
 results*/
+*.jpg
+*.JPG
+*.pdf
+.RData
+.Rhistory
