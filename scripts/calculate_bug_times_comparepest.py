@@ -36,8 +36,11 @@ def main(repetitions:int) -> None:
 			bench:str = bug[0]
 			ex:str = bug[1]
 			rep:int =bug[2]
+			k:int = 0
 			for technique, times in data.items():
-				repeatibility:float = len(times)/repetitions
+				k =k +1
+			for technique, times in data.items():
+				repeatibility:float = k
 				for crash_time in times:
 					mtf:float = crash_time
 					csv.writerow([bench,rep, ex, technique, mtf, repeatibility])
