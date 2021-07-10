@@ -36,11 +36,25 @@ def main(repetitions:int) -> None:
 			bench:str = bug[0]
 			ex:str = bug[1]
 			rep:int =bug[2]
-			k:int = 0
+			z:int = 0
+			p:int = 0
+			p2:int = 0
+			for technique in data.items():
+				if technique == "pest":
+					p = p+1
+				if technique == "zest":
+					z = z+1
+				if technique == "pest2":
+					p2 = p2+1
+			repeatibility:float = 0
 			for technique, times in data.items():
-				k =k +1
-			for technique, times in data.items():
-				repeatibility:float = k
+				if technique == "pest":
+					repeatibility = p/repetitions
+				if technique == "zest":
+					repeatibility = z/repetitions
+				if technique == "pest2":
+					repeatibility = p2/repetitions
+				
 				for crash_time in times:
 					mtf:float = crash_time
 					csv.writerow([bench,rep, ex, technique, mtf, repeatibility])
