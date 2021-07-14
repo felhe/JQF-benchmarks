@@ -12,8 +12,13 @@ library(ggpubr)
 library(lubridate)
 
 
-
+## specify path to .csv file for Table 2 generation
 Path_to_Table2_CSV  ="table2/bench_8m_25_comparepest.csv";
+
+
+## Directory with benchmark rawdata
+path_bench_data = "results_8m_20_comp"
+
 
 generateTable2Boxplot <- function(Path_to_Table2_CSV){
   
@@ -211,15 +216,12 @@ generateTable2Barplot <- function(Path_to_Table2_CSV){
 
 
 
-generateTable2Boxplot( Path_to_Table2_CSV  )
-generateTable2Barplot( Path_to_Table2_CSV  )
+
+read_Meas_p_z_Data <- function(mydir){
 
 
-#read_Meas_Data <- function(mydir){
 
-mydir = "results_8m_20_comp"
 
-myfiles_pest2 <- list.files(path=mydir, pattern="viz.csv", full.names=TRUE,recursive = TRUE)
 
 
 myfiles_pest_zest <- list.files(path=mydir, pattern="plot_data", full.names=TRUE,recursive = TRUE)
@@ -229,7 +231,6 @@ myfiles_pest_zest <- list.files(path=mydir, pattern="plot_data", full.names=TRUE
 #myfiles_pest_zest <- myfiles_pest_zest[!str_detect(myfiles_pest_zest,pattern="pest2")]
 
 colames_p_z <- c("unix_time", "cycles_done", "cur_path", "paths_total", "pending_total", "pending_favs", "map_size", "unique_crashes", "unique_hangs", "max_depth","execs_per_sec","valid_inputs", "invalid_inputs", "valid_cov")
-colames_p2  <- c("execsPerSec", "saved_Inputs", "nonZeroCount", "nonZeroValidCount", "elapsedMilliseconds","null")
 
 
 dat_z_p <- list()
@@ -298,130 +299,191 @@ dat_z_p = lapply(myfiles_pest_zest,function(x){
 
 
 
-dat_p2 <- list()
-dat_p2 = lapply(myfiles_pest2,function(x){
-  if(!file.size(x)==0){
-    y = read.table(x,header = TRUE,sep = ",",quote = "",fill=TRUE,col.names =colames_p2)
-  }
-  y$path = x
-  
-  
-  y$elapsedMilliseconds <- gsub("m","M",y$elapsedMilliseconds)
-  y$elapsedMilliseconds <- duration(y$elapsedMilliseconds)
-  
-  y$elapsedMilliseconds <- as.numeric(y$elapsedMilliseconds)
-  
-  
-
-  y$cycles_done <- seq.int(nrow(y))
-
-  
-  if(grepl("pest",x, fixed=TRUE)){
-    y$guidance = "pest"
-  }
-  
-  if(grepl( "pest2",x, fixed=TRUE)){
-    y$guidance = "pest2"
-  }
-  
-  if(grepl("zest",x, fixed=TRUE)){
-    y$guidance = "zest"
-  }
-  
-  if(grepl("ant",x, fixed=TRUE)){
-    y$tool = "ant"
-  }
-  
-  if(grepl("closure",x, fixed=TRUE)){
-    y$tool = "closure"
-  }
-  
-  if(grepl("rhino",x, fixed=TRUE)){
-    y$tool = "rhino"
-  }
-  
-  if(grepl("bcel",x, fixed=TRUE)){
-    y$tool = "bcel"
-  }
-  
-  if(grepl( "maven",x, fixed=TRUE)){
-    y$tool = "maven"
-  }
-  
-  rep_id <- gsub("-","",str_sub(x, start= -11,end = -9))
-  
-  y$repetition_id <- strtoi(rep_id, base = 0L)
-  
-  #t_start <- y$unix_time[1]
-  
-  #y$unix_time <- y$unix_time - t_start
-  
-  y$valid_cov <- NULL
-  y$map_size <- NULL
-  
-  return(y)
-}
-)
 
 
 
 
 
-table_p2 <- bind_rows(dat_p2)
+
 
 
 
 table_z_p <- bind_rows(dat_z_p)
 
 
+return(table_z_p)
+}
 
 
-h = 30
-w = 50
+
+read_Meas_p2_Data <- function(mydir){
+
+  myfiles_pest2 <- list.files(path=mydir, pattern="viz.csv", full.names=TRUE,recursive = TRUE)
+  
+  colames_p2  <- c("execsPerSec", "saved_Inputs", "nonZeroCount", "nonZeroValidCount", "elapsedMilliseconds","null")
+  
+  
+  dat_p2 <- list()
+  dat_p2 = lapply(myfiles_pest2,function(x){
+    if(!file.size(x)==0){
+      y = read.table(x,header = TRUE,sep = ",",quote = "",fill=TRUE,col.names =colames_p2)
+    }
+    y$path = x
+    
+    
+    y$elapsedMilliseconds <- gsub("m","M",y$elapsedMilliseconds)
+    y$elapsedMilliseconds <- duration(y$elapsedMilliseconds)
+    
+    y$elapsedMilliseconds <- as.numeric(y$elapsedMilliseconds)
+    
+    
+    
+    y$cycles_done <- seq.int(nrow(y))
+    
+    
+    if(grepl("pest",x, fixed=TRUE)){
+      y$guidance = "pest"
+    }
+    
+    if(grepl( "pest2",x, fixed=TRUE)){
+      y$guidance = "pest2"
+    }
+    
+    if(grepl("zest",x, fixed=TRUE)){
+      y$guidance = "zest"
+    }
+    
+    if(grepl("ant",x, fixed=TRUE)){
+      y$tool = "ant"
+    }
+    
+    if(grepl("closure",x, fixed=TRUE)){
+      y$tool = "closure"
+    }
+    
+    if(grepl("rhino",x, fixed=TRUE)){
+      y$tool = "rhino"
+    }
+    
+    if(grepl("bcel",x, fixed=TRUE)){
+      y$tool = "bcel"
+    }
+    
+    if(grepl( "maven",x, fixed=TRUE)){
+      y$tool = "maven"
+    }
+    
+    rep_id <- gsub("-","",str_sub(x, start= -11,end = -9))
+    
+    y$repetition_id <- strtoi(rep_id, base = 0L)
+    
+    #t_start <- y$unix_time[1]
+    
+    #y$unix_time <- y$unix_time - t_start
+    
+    y$valid_cov <- NULL
+    y$map_size <- NULL
+    
+    return(y)
+  }
+  )
+  
+  
+  
+  table_p2 <- bind_rows(dat_p2)
+  
+  return(table_p2)
+}
 
 
+
+
+
+
+generateTable2Boxplot( Path_to_Table2_CSV  )
+generateTable2Barplot( Path_to_Table2_CSV  )
+
+
+
+
+
+### Generate Table 2
+table_z_p <- read_Meas_p_z_Data(path_bench_data)
+table_p2 <- read_Meas_p2_Data(path_bench_data)
+
+
+
+
+
+
+print_plot <- function(gg_plot,file_str,h,w){
+  #valid inputs
+  ggsave(paste(file_str,".pdf"), plot= gg_plot,device = "pdf",path = "imgs/",width = w,height = h, units = "cm",dpi = "print")
+  ggsave(paste(file_str,".jpg"), plot= gg_plot,device = "jpg",path = "imgs/",width = w,height = h, units = "cm",dpi = "print")
+  
+}
+
+plot_data_Variable <- function(data_table,time_interval,colName,ylabel ,scale){
+
+  
+  aggregated_tab <- data_table %>% 
+    select(guidance,unix_time,tool,.data[[colName]])%>%
+    group_by(guidance,tool,unix_time,) %>%
+    mutate(G = floor(unix_time/time_interval))%>%
+    mutate(unix_time = G * time_interval) %>%
+    select(guidance,unix_time,tool,.data[[colName]])%>%
+    summarise(mean = mean(.data[[colName]]),
+              sd = sd(.data[[colName]]),
+              max = mean + sd,
+              min = mean -sd,
+              N = n())
+var_plot <-  aggregated_tab %>%  ggplot(aes(y = mean ,x = unix_time, ymin = min,ymax = max,color = guidance))+
+    facet_wrap(~tool,nrow = 1,scales = scale)+
+    scale_color_brewer(palette="Set2")+
+    geom_ribbon( alpha = 0.1)+
+    geom_line(size = 1.1)+ 
+    theme_bw()+
+    theme(legend.position="top") +
+    ylab(ylabel)+
+    xlab("time in s")
+
+return(var_plot)
+}
+
+## Labels for Legend 
 label_leg = c("pest/performances-core","pest/input","zest")
 
-valid_inputs <-  ggplot(table_z_p,aes( y=valid_inputs,x = unix_time,color = guidance ))+
-  geom_smooth(na.rm = TRUE)+
-  theme(legend.position="top") +
-  facet_wrap(~tool,nrow = 1)+
-  ylab("valid Inputs")+
-  xlab("time in s")+
-  scale_colour_discrete(name = "Guidance Version", labels = label_leg)
+
+
+h = 15
+w = 60
 
 
 
-unique_crashes <- ggplot(table_z_p,aes( y=unique_crashes,x = unix_time,color = guidance ))+
-  geom_smooth(na.rm = TRUE)+
-  theme(legend.position="top") +
-  facet_wrap(~tool,nrow = 1)+
-  ylab("unique crashes")+
-  xlab("time in s")+
-  scale_colour_discrete(name = "Guidance Version", labels = label_leg)
-    #scale_fill_brewer(palette = "Set1") 
-  
+paths_total_vec <- c("paths_total","paths totoal","fixed")
 
-execs_per_sec <- ggplot(table_z_p,aes( y=execs_per_sec,x = unix_time,color = guidance ))+
-  geom_smooth(na.rm = TRUE)+
-  facet_wrap(~tool,nrow = 1)+
-  theme(legend.position="top") +
-  ylab("executions per second")+
-  xlab("time in s")+
-  scale_colour_discrete(name = "Guidance Version", labels = label_leg)
-  #scale_fill_brewer(palette = "Set1") 
+cycles_done_vec <- c("cycles_done","cycles done","fixed")
+
+execs_per_sec_vec <-c("execs_per_sec","executions per second","fixed")
+
+unique_crashes_vec <-c("unique_crashes","unique crashes","fixed")
 
 
 
+plot_vec <- list(paths_total_vec,cycles_done_vec,execs_per_sec_vec,unique_crashes_vec)
 
-paths_total <- ggplot(table_z_p,aes( y=paths_total,x = unix_time,color = guidance ))+
-  geom_smooth(na.rm = TRUE)+
-  theme(legend.position="top") +
-  facet_wrap(~tool,nrow = 1)+
-  ylab("paths total")+
-  xlab("time in s")+
-  scale_colour_discrete(name = "Guidance Version", labels = label_leg)
-  #scale_fill_brewer(palette = "Set1") 
+
+paths_total <- plot_data_Variable(table_z_p,20,paths_total_vec[1],paths_total_vec[2],paths_total_vec[3])  
+
+print_plot(paths_total,paths_total_vec[1],h,w)
+
+plot_data_Variable(table_z_p,20,"valid_inputs","valid Inputs","fixed")  
+
+
+plot_data_Variable(table_z_p,20,"unique_crashes","unique crashes","free")
+
+
+
 
 cycles_done <- ggplot(table_z_p,aes( y=cycles_done,x = unix_time,color = guidance ))+
   geom_smooth(na.rm = TRUE,data =subset(table_z_p, guidance != "pest2"))+
@@ -431,16 +493,9 @@ cycles_done <- ggplot(table_z_p,aes( y=cycles_done,x = unix_time,color = guidanc
   ylab("cycles done")+
   xlab("time in s")+
   scale_colour_discrete(name = "Guidance Version", labels = label_leg)
-  #scale_fill_brewer(palette = "Set1") 
+#scale_fill_brewer(palette = "Set1") 
 
 
-
-majorPlot <- ggarrange(valid_inputs, unique_crashes,execs_per_sec,paths_total,cycles_done,
-          labels = c("A", "B", "C","D","E"),
-          ncol = 1, nrow = 5)
-
-ggsave("all.pdf", plot= majorPlot,device = "pdf",path = "imgs/",width = 50,height = 40, units = "cm",dpi = "print")
-ggsave("all.jpg", plot= majorPlot,device = "jpg",path = "imgs/",width = 50,height = 40, units = "cm",dpi = "print")
 
 
 
@@ -455,31 +510,11 @@ saved_inputs <- ggplot(table_p2,aes( y=saved_Inputs,x = elapsedMilliseconds,colo
 
 
 
-# Plots for Report
-
-# input queue
-ggsave("saved_inputs.pdf", plot= saved_inputs,device = "pdf",path = "imgs/",width = 30,height = 10, units = "cm",dpi = "print")
-ggsave("saved_inputs.jpg", plot= saved_inputs,device = "jpg",path = "imgs/",width = 30,height = 10, units = "cm",dpi = "print")
-
-#execs per second
-ggsave("execs_per_sec.pdf", plot= execs_per_sec,device = "pdf",path = "imgs/",width = 30,height = 10, units = "cm",dpi = "print")
-ggsave("execs_per_sec.jpg", plot= execs_per_sec,device = "jpg",path = "imgs/",width = 30,height = 10, units = "cm",dpi = "print")
+#majorPlot <- ggarrange(valid_inputs, unique_crashes,execs_per_sec,paths_total,cycles_done,
+#                       labels = c("A", "B", "C","D","E"),
+#                       ncol = 1, nrow = 5)
 
 
-#execs per second
-ggsave("unique_crashes.pdf", plot= unique_crashes,device = "pdf",path = "imgs/",width = 30,height = 10, units = "cm",dpi = "print")
-ggsave("unique_crashes.jpg", plot= unique_crashes,device = "jpg",path = "imgs/",width = 30,height = 10, units = "cm",dpi = "print")
-
-
-#valid inputs
-ggsave("valid_inputs.pdf", plot= valid_inputs,device = "pdf",path = "imgs/",width = 30,height = 10, units = "cm",dpi = "print")
-ggsave("valid_inputs.jpg", plot= valid_inputs,device = "jpg",path = "imgs/",width = 30,height = 10, units = "cm",dpi = "print")
-
-
-#return(dat_txt)
-#}
-
-
-
-
+#ggsave("all.pdf", plot= majorPlot,device = "pdf",path = "imgs/",width = 50,height = 40, units = "cm",dpi = "print")
+#ggsave("all.jpg", plot= majorPlot,device = "jpg",path = "imgs/",width = 50,height = 40, units = "cm",dpi = "print")
 
