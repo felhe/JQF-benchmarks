@@ -407,7 +407,7 @@ print_plot <- function(gg_plot,file_str,h,w){
 
 
 # plots a var of the table over time  for each fuzzed tool
-plot_data_Variable <- function(data_table,time_interval,colName,ylabel ,scale,leglab){
+plot_data_Variable <- function(data_table,time_interval,colName,ylabel ,scale,leglab, rows_number){
   
   
   aggregated_tab <- data_table                        %>% 
@@ -422,7 +422,7 @@ plot_data_Variable <- function(data_table,time_interval,colName,ylabel ,scale,le
               min = mean -sd,
               N = n())
   var_plot <-  aggregated_tab %>%  ggplot(aes(y = mean ,x = unix_time, ymin = min,ymax = max,color = guidance))+
-    facet_wrap(~tool,nrow = 1,scales = scale)+
+    facet_wrap(~tool,nrow = rows_number,scales = scale)+
     scale_color_brewer(palette="Set2",labels= leglab,name = "Guidance")+
     geom_ribbon( alpha = 0.1)+
     geom_line(size = 1.1)+ 
@@ -436,7 +436,7 @@ plot_data_Variable <- function(data_table,time_interval,colName,ylabel ,scale,le
 
 
 # plots a var of the table over time  for each fuzzed tool
-plot_data_Variable_omit_pest2 <- function(data_table,data_table2,time_interval,colName,colName2,ylabel ,scale,leglab){
+plot_data_Variable_omit_pest2 <- function(data_table,data_table2,time_interval,colName,colName2,ylabel ,scale,leglab,rows_number){
   
   
   
@@ -469,7 +469,7 @@ plot_data_Variable_omit_pest2 <- function(data_table,data_table2,time_interval,c
               N = n())
   
   var_plot <-  aggregated_tab %>%  ggplot(aes(y = mean ,x = unix_time, ymin = min,ymax = max,color = guidance))+
-    facet_wrap(~tool,nrow = 1,scales = scale)+
+    facet_wrap(~tool,nrow = rows_number,scales = scale)+
     scale_color_brewer(palette="Set2",labels= leglab,name = "Guidance")+
     geom_ribbon( alpha = 0.1)+
     geom_smooth(data = aggregated_tab2,aes(y = mean ,x = elapsedMilliseconds, ymin = min,ymax = max,color = guidance ))+
@@ -523,8 +523,14 @@ table_p2 <- read_Meas_p2_Data(path_bench_data)
 
 ## Labels for Legend 
 label_leg = c("pest/performance-score","pest/input","zest")
+
+## x axis tick labels for some plots
 x_tic_labs =  c("pest" = "perf.-score","zest" = "zest", "pest2" = "input")
 
+
+
+## NUmber of rows in undividual Plot (set to 1 for correct all.pdf/all.jpg printing)
+number_of_rows <- 1
 
 
 h = 15
@@ -556,7 +562,7 @@ plot_list <- list()
 i <- 1
 
 for (var in var_list){
-  plotted_var <- plot_data_Variable(table_z_p,100,var[1],var[2],var[3],label_leg)  
+  plotted_var <- plot_data_Variable(table_z_p,100,var[1],var[2],var[3],label_leg,number_of_rows)  
   print_plot(plotted_var,var[1],h,w)
   
   plot_list[[i]] <- plotted_var
@@ -576,7 +582,7 @@ aggregated_exec_per_sec   <- table_z_p                %>%
 
 plot_list[[length(plot_list)+1]] <- 
   ggplot(data = aggregated_exec_per_sec,aes(x = guidance, y = execs_per_sec, group = factor(guidance), color = factor(guidance),fill = factor(guidance) ))+
-  facet_wrap(~tool,scales = "free",nrow = 1)+
+  facet_wrap(~tool,scales = "free",nrow = number_of_rows)+
   geom_violin(trim = "true")+
   ylab("executions per second")+
   scale_x_discrete( labels =x_tic_labs)+
@@ -587,12 +593,17 @@ plot_list[[length(plot_list)+1]] <-
 
 print_plot(plot_list[[length(plot_list)]],"execs_per_sec_violin",h,w)
 
+ aggregated_exec_per_sec <- aggregated_exec_per_sec %>% summarise(mean_exec_per_sec = mean(execs_per_sec),
+                                     median = median(execs_per_sec),
+                                     standard_dev = sd(execs_per_sec))
 
 
+
+write.csv(aggregated_exec_per_sec,"imgs/exexcs_per_sec.csv", row.names = FALSE)
 
 
 ## saved inputs #####################################
-plot_list[[length(plot_list)+1]] <- plot_data_Variable_omit_pest2(table_z_p,table_p2,20,"paths_total","saved_Inputs","Inputs saved","free",label_leg)
+plot_list[[length(plot_list)+1]] <- plot_data_Variable_omit_pest2(table_z_p,table_p2,20,"paths_total","saved_Inputs","Inputs saved","free",label_leg,number_of_rows)
 
 print_plot(plot_list[[length(plot_list)]],"saved_Inputs",h,w)
 
