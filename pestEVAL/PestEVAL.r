@@ -56,6 +56,7 @@ generateTable2Boxplot <- function(Path_to_Table2_CSV){
   crash_names <- c(
     'ant java.lang.IllegalStateException' = "IllegalStateException",
     'closure java.lang.NullPointerException' = "NullPointerException",
+    'closure java.lang.RuntimeException' = "RuntimeException",
     'rhino java.lang.NullPointerException' = "NullPointerException",
     'rhino java.lang.IllegalStateException' = "IllegalStateException",
     'bcel org.apache.bcel.classfile.ClassFormatException' = "ClassFormatException",
@@ -493,8 +494,8 @@ plot_data_Variable_omit_pest2 <- function(data_table,data_table2,time_interval,c
 
 
 ## specify path to .csv file for Table 2 generation
-Path_to_Table2_CSV_bar  ="table2/bench_main_1h_10.csv";
-Path_to_Table2_CSV_box  ="table2/bench_main_1h_10_unique_lines.csv";
+Path_to_Table2_CSV_bar  ="results_main_bench/figures/Table_2_bar.csv";
+Path_to_Table2_CSV_box  ="results_main_bench/figures/Table_2_box.csv";
 
 ## Directory with benchmark rawdata
 path_bench_data = "results_main_bench"
