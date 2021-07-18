@@ -1,6 +1,8 @@
 ### PestEval R File usage
+Before running the Script you have to set the working directory to `source file location`
 
-
+In RStudio:
+`Session --> Set working directory --> source file location` 
 
 
 ## Suggested Directory Structure
