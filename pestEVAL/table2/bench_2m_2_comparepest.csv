@@ -1,0 +1,15 @@
+benchmark,exception,tool,mtf,repeatibility
+ant,java.lang.IllegalStateException,pest2,65.0,0.5
+closure,java.lang.NullPointerException,zest,5.5,1.0
+closure,java.lang.NullPointerException,pest,12.0,1.0
+closure,java.lang.NullPointerException,pest2,24.0,1.0
+rhino,java.lang.IllegalStateException,zest,22.5,1.0
+rhino,java.lang.IllegalStateException,pest,11.0,1.0
+rhino,java.lang.IllegalStateException,pest2,11.0,1.0
+rhino,java.lang.NullPointerException,pest2,12.0,0.5
+rhino,java.lang.NullPointerException,pest,18.0,0.5
+bcel,org.apache.bcel.classfile.ClassFormatException,zest,49.5,1.0
+bcel,org.apache.bcel.classfile.ClassFormatException,pest,27.5,1.0
+bcel,org.apache.bcel.classfile.ClassFormatException,pest2,13.5,1.0
+bcel,org.apache.bcel.verifier.exc.AssertionViolatedException,zest,47.0,0.5
+bcel,org.apache.bcel.verifier.exc.AssertionViolatedException,pest,6.0,0.5
