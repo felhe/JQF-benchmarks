@@ -41,10 +41,12 @@ RUN make clean all
 
 
 WORKDIR /zest-artifact/jqf-PEST
+RUN git checkout pest/performance-score
 RUN mvn install
 RUN make clean all
 
 WORKDIR /zest-artifact/jqf-PEST2
+RUN git checkout pest/input
 RUN mvn install
 RUN make clean all
 
