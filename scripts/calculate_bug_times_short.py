@@ -28,7 +28,7 @@ def main(repetitions:int) -> None:
 				except FileNotFoundError:
 					pass # Ignore if results.csv is not found
 
-table_csv:str = 'figures/Table_2.csv'
+    table_csv:str = 'figures/Table_2.csv'
 	with open(table_csv, 'w') as csvfile:
 		csv = writer(csvfile)
 		csv.writerow(['benchmark','repetition_id', 'exception', 'tool', 'mtf', 'repeatibility'])
