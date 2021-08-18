@@ -28,17 +28,20 @@ def main(repetitions:int) -> None:
 				except FileNotFoundError:
 					pass # Ignore if results.csv is not found
 
-	table_csv:str = 'figures/Table_2.csv'
+table_csv:str = 'figures/Table_2.csv'
 	with open(table_csv, 'w') as csvfile:
 		csv = writer(csvfile)
-		csv.writerow(['benchmark', 'exception', 'tool', 'mtf', 'repeatibility'])
+		csv.writerow(['benchmark','repetition_id', 'exception', 'tool', 'mtf', 'repeatibility'])
 		for bug, data in bug_data.items():
 			bench:str = bug[0]
 			ex:str = bug[1]
 			for technique, times in data.items():
 				mtf:float = sum(times)/float(len(times))
 				repeatibility:float = len(times)/repetitions
-				csv.writerow([bench, ex, technique, mtf, repeatibility])
+				rep_id:int = 0
+				for crashtimes in times:
+					rep_id = rep_id +1
+					csv.writerow([bench, rep_id,ex, technique, crashtimes, repeatibility])
 
 
 def process(bench:str, tech:str, id:int) -> None:
