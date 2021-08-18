@@ -9,8 +9,8 @@ from collections import defaultdict
 import sys
 
 
-# Bugs are represented as tuple of (bench, exception,repetition_id)
-Bug = Tuple[str, str, int]
+# Bugs are represented as tuple of (bench, exception)
+Bug = Tuple[str, str]
 
 # Crash times are a list of (elapsed_time, num_crashes)
 CrashTimes = List[Tuple[int, int]]
@@ -35,12 +35,13 @@ def main(repetitions:int) -> None:
 		for bug, data in bug_data.items():
 			bench:str = bug[0]
 			ex:str = bug[1]
-			rep:int =bug[2]
 			for technique, times in data.items():
+				mtf:float = sum(times)/float(len(times))
 				repeatibility:float = len(times)/repetitions
-				for crash_time in times:
-					mtf:float = crash_time
-					csv.writerow([bench,rep, ex, technique, mtf, repeatibility])
+				rep_id:int = 0
+				for crashtimes in times:
+					rep_id = rep_id +1
+					csv.writerow([bench, rep_id,ex, technique, crashtimes, repeatibility])
 
 
 def process(bench:str, tech:str, id:int) -> None:
@@ -71,7 +72,7 @@ def process(bench:str, tech:str, id:int) -> None:
 					crash_id = int(input[11:])
 				else:
 					continue # Other stuff
-				bug:Bug = (bench, ex,id)
+				bug:Bug = (bench, ex)
 				if bug not in bugs_found:
 					bugs_found.add(bug)
 					bug_find_time:int = find_crash_time(crash_id, crash_times)

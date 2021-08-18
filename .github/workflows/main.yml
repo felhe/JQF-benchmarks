@@ -1,0 +1,24 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events but only for the main branch
+  push:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job
+  build-and-publish-latest:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2 # Checking out the repo
+
+    - name: Build and Publish latest Docker image
+      uses: VaultVulp/gp-docker-action@1.1.8
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
+        image-name: pest_image # Provide only Docker image name, tag will be automatically set to latest
