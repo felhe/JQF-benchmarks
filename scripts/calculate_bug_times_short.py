@@ -22,13 +22,13 @@ bug_data:Dict[Bug, Dict[str, List[int]]] = defaultdict(lambda: defaultdict(list)
 def main(repetitions:int) -> None:
 	for i in range(repetitions):
 		for bench in ["maven", "ant", "closure", "rhino", "bcel"]:
-			for tech in ["zest","pest" ]:
+			for tech in ["zest","pest"]:
 				try:
 					process(bench, tech, i+1)
 				except FileNotFoundError:
 					pass # Ignore if results.csv is not found
 
-    table_csv:str = 'figures/Table_2.csv'
+	table_csv:str = 'figures/Table_2.csv'
 	with open(table_csv, 'w') as csvfile:
 		csv = writer(csvfile)
 		csv.writerow(['benchmark','repetition_id', 'exception', 'tool', 'mtf', 'repeatibility'])
