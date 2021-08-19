@@ -20,7 +20,7 @@ for e in $(seq $RUNS); do
   JQF_PEST_OUT_DIR="${RESULTS_DIR}/$NAME-pest-results-$e"
   JQF_OUT_DIR="${RESULTS_DIR}/$NAME-zest-results-$e"
 
-  OUT_DIRS=($JQF_OUT_DIR $JQF_PEST_OUT_DIR)
+  OUT_DIRS=($JQF_PEST_OUT_DIR $JQF_OUT_DIR)
 
   for dir_index in ${!OUT_DIRS[@]}; do
      OUT_DIR=${OUT_DIRS[$dir_index]}
