@@ -37,10 +37,8 @@ export JVM_OPTS="$JVM_OPTS -Djqf.repro.logUniqueBranches=true"
 for e in $(seq $RUNS); do
   ZEST_OUT_DIR="${RESULTS_DIR}/$NAME-zest-results-$e"
   PEST_OUT_DIR="${RESULTS_DIR}/$NAME-pest-results-$e"
-  AFL_OUT_DIR="${RESULTS_DIR}/$NAME-afl-results-$e"
-  RND_OUT_DIR="${RESULTS_DIR}/$NAME-rnd-results-$e"
 
-  OUT_DIRS=($AFL_OUT_DIR $ZEST_OUT_DIR $PEST_OUT_DIR $RND_OUT_DIR)
+  OUT_DIRS=($ZEST_OUT_DIR $PEST_OUT_DIR )
   TEST_FUNCTIONS=(testWithInputStream testWithGenerator testWithGenerator) 
   CORPUS_DIRS=(queue/id corpus/ corpus/)
 
