@@ -39,7 +39,7 @@ for e in $(seq $RUNS); do
   PEST_OUT_DIR="${RESULTS_DIR}/$NAME-pest-results-$e"
 
   OUT_DIRS=($ZEST_OUT_DIR $PEST_OUT_DIR )
-  TEST_FUNCTIONS=(testWithInputStream testWithGenerator testWithGenerator) 
+  TEST_FUNCTIONS=(testWithGenerator testWithGenerator) 
   CORPUS_DIRS=(queue/id corpus/ corpus/)
 
   for dir_index in ${!OUT_DIRS[@]}; do

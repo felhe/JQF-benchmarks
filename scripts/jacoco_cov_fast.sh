@@ -41,7 +41,7 @@ for e in $(seq $RUNS); do
   RND_OUT_DIR="${RESULTS_DIR}/$NAME-rnd-results-$e"
 
   OUT_DIRS=($AFL_OUT_DIR $ZEST_OUT_DIR $PEST_OUT_DIR $RND_OUT_DIR)
-  TEST_FUNCTIONS=(testWithInputStream testWithGenerator testWithGenerator) 
+  TEST_FUNCTIONS=(testWithInputStream testWithGenerator testWithGenerator testWithGenerator) 
   CORPUS_DIRS=(queue/id corpus/ corpus/)
 
   for dir_index in ${!OUT_DIRS[@]}; do
