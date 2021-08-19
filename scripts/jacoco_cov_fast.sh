@@ -42,7 +42,7 @@ for e in $(seq $RUNS); do
 
   OUT_DIRS=($AFL_OUT_DIR $ZEST_OUT_DIR $PEST_OUT_DIR $RND_OUT_DIR)
   TEST_FUNCTIONS=(testWithInputStream testWithGenerator testWithGenerator testWithGenerator) 
-  CORPUS_DIRS=(queue/id corpus/ corpus/)
+  CORPUS_DIRS=(queue/id corpus/ corpus/ corpus/)
 
   for dir_index in ${!OUT_DIRS[@]}; do
      OUT_DIR=${OUT_DIRS[$dir_index]}
