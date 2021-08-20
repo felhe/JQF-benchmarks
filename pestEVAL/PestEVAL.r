@@ -27,7 +27,7 @@ generateTable2Boxplot <- function(Path_to_Table2_CSV){
   performance_score$tool_f = factor(performance_score$tool)
   performance_score$concat_name_f = factor(performance_score$concat_name)
   
-  max_x = 400 #max(performance_score$mtf)
+  max_x = max(performance_score$mtf)
   
   
   
@@ -37,7 +37,7 @@ generateTable2Boxplot <- function(Path_to_Table2_CSV){
   performance_score$x = 1;
   performance_score$y =  max_x+10;
   
-  xoffset = 60
+  xoffset = 380
   
   annotate_rel = character(nrow(performance_score));
   annotate_rel[1] = "Reliability:"
@@ -46,8 +46,8 @@ generateTable2Boxplot <- function(Path_to_Table2_CSV){
   
   performance_score$xreliab = performance_score$x
   
-  performance_score$xreliab =  ifelse(performance_score$tool == 'zest',performance_score$xreliab + (N_Guidance_V-1) , performance_score$xreliab)
-  performance_score$xreliab =  ifelse(performance_score$tool == 'pest2',performance_score$xreliab + (N_Guidance_V-2) , performance_score$xreliab)
+  performance_score$xreliab =  ifelse(performance_score$tool == 'pest',performance_score$xreliab + (N_Guidance_V-1) , performance_score$xreliab)
+  performance_score$xreliab =  ifelse(performance_score$tool == 'zest',performance_score$xreliab + (N_Guidance_V-2) , performance_score$xreliab)
   
   
   
@@ -66,16 +66,26 @@ generateTable2Boxplot <- function(Path_to_Table2_CSV){
   )
   
   
+  performance_score$tool <- factor(performance_score$tool, levels = c("zest","pest","pest2"))
+  
   p  <- ggplot(performance_score,aes(fill =tool, y=mtf,x = tool ))+
+    geom_text( # Class under Test
+      data    = performance_score,
+      mapping = aes(x = x+0.2, y = y, label = benchmark),
+      alpha = 1,
+      size = 17,
+      colour = "gray70",
+      hjust = 1
+    )+
     #geom_bar(position="dodge", stat="identity") +
     geom_boxplot()+
     #geom_dotplot(binaxis = 'y', dotsize = 0.3,stackdir = 'center')+
     facet_wrap(~concat_name ,strip.position = "top",nrow = number_rows,labeller = as_labeller(crash_names) )+
     theme(legend.position="top") +
-    ylab("Mean time to Find in s")+
+    ylab("Time to Find in s")+
     xlab("")+
-    scale_fill_brewer(palette = "Set2",labels = c("pest/perf.-score","pest/input","zest")) +
-    scale_x_discrete( labels = c("pest" = "perf.-score","zest" = "zest", "pest2" = "input"))+
+    scale_fill_brewer(palette = "Set2",labels = c("zest","pest/perf.-score","pest/input")) +
+    scale_x_discrete( labels = c( "pest2" = "input","pest" = "perf.-score","zest" = "zest"))+
     coord_flip(clip = "off",ylim = c(0,max_x),xlim = c(1,N_Guidance_V))+
     labs(fill ="Guidance Version")+
     theme(strip.text =  element_text(size = rel(1.3),face = "bold", colour = "gray39"),
@@ -87,14 +97,7 @@ generateTable2Boxplot <- function(Path_to_Table2_CSV){
           legend.text = element_text(size=19),
           plot.margin = unit(c(0.5,5,1,1), "cm")
     )+
-    geom_text( # Class under Test
-      data    = performance_score,
-      mapping = aes(x = x+0.2, y = y, label = benchmark),
-      alpha = 1,
-      size = 17,
-      colour = "gray50",
-      hjust = 1
-    )+
+   
     geom_text( # reliability scores
       data    = performance_score,
       mapping = aes(x = xreliab, y = y+xoffset, label = round(repeatibility,2) ),
@@ -424,7 +427,7 @@ plot_data_Variable <- function(data_table,time_interval,colName,ylabel ,scale,le
               N = n())
   var_plot <-  aggregated_tab %>%  ggplot(aes(y = mean ,x = unix_time, ymin = min,ymax = max,color = guidance))+
     facet_wrap(~tool,nrow = rows_number,scales = scale)+
-    scale_color_brewer(palette="Set2",labels= leglab,name = "Guidance")+
+    scale_color_brewer(palette="Set2",labels= leglab,name = "Guidance",direction = -1)+
     geom_ribbon( alpha = 0.1)+
     geom_line(size = 1.1)+ 
     theme_bw()+
@@ -471,7 +474,7 @@ plot_data_Variable_omit_pest2 <- function(data_table,data_table2,time_interval,c
   
   var_plot <-  aggregated_tab %>%  ggplot(aes(y = mean ,x = unix_time, ymin = min,ymax = max,color = guidance))+
     facet_wrap(~tool,nrow = rows_number,scales = scale)+
-    scale_color_brewer(palette="Set2",labels= leglab,name = "Guidance")+
+    scale_color_brewer(palette="Set2",labels= leglab,name = "Guidance",direction = -1)+
     geom_ribbon( alpha = 0.1)+
     geom_smooth(data = aggregated_tab2,aes(y = mean ,x = elapsedMilliseconds, ymin = min,ymax = max,color = guidance ))+
     geom_line(size = 1.1)+ 
@@ -494,11 +497,14 @@ plot_data_Variable_omit_pest2 <- function(data_table,data_table2,time_interval,c
 
 
 ## specify path to .csv file for Table 2 generation
-Path_to_Table2_CSV_bar  ="results_main_bench/figures/Table_2_bar.csv";
-Path_to_Table2_CSV_box  ="results_main_bench/figures/Table_2_box.csv";
+#Path_to_Table2_CSV_bar  ="results_main_bench/figures/Table_2.csv";
+#Path_to_Table2_CSV_box  ="results_main_bench/figures/Table_2.csv";
+
+Path_to_Table2_CSV_bar  ="table2/bench_3h_10reps.csv";
+Path_to_Table2_CSV_box  ="table2/bench_3h_10reps.csv";
 
 ## Directory with benchmark rawdata
-path_bench_data = "results_main_bench"
+path_bench_data = "results_main_bench/"
 
 
 
@@ -516,14 +522,13 @@ table_z_p <- read_Meas_p_z_p2Data(path_bench_data)
 table_p2 <- read_Meas_p2_Data(path_bench_data)
 
 
-
-
-
+table_z_p$guidance <- factor(table_z_p$guidance, levels = c("pest2","pest","zest"))
+table_p$guidance <- factor(table_p2$guidance, levels = c("pest2","pest","zest"))
 
 
 
 ## Labels for Legend 
-label_leg = c("pest/performance-score","pest/input","zest")
+label_leg = c("pest/input","pest/performance-score","zest")
 
 ## x axis tick labels for some plots
 x_tic_labs =  c("pest" = "perf.-score","zest" = "zest", "pest2" = "input")
@@ -589,8 +594,8 @@ plot_list[[length(plot_list)+1]] <-
   scale_x_discrete( labels =x_tic_labs)+
   theme_bw()+
   geom_boxplot(width=0.1,fill = "white")+
-  scale_color_brewer(palette="Set2",labels= label_leg,name = "Guidance")+
-  scale_fill_brewer(palette="Set2",labels= label_leg,name = "Guidance")
+  scale_color_brewer(palette="Set2",labels= label_leg,name = "Guidance",direction = -1)+
+  scale_fill_brewer(palette="Set2",labels= label_leg,name = "Guidance",direction = -1)
 
 print_plot(plot_list[[length(plot_list)]],"execs_per_sec_violin",h,w)
 
